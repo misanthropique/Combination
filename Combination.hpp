@@ -29,11 +29,16 @@ public:
 		std::vector< size_t > mEnumeration;
 
 		iterator(
-			bool begin,
+			bool end,
 			size_t numberElements,
 			size_t subsetSize )
 		{
-			
+			size_t offset = end * ( numberElements - mSubsetSize );
+			mNumberElements = numberElements;
+			mSubsetSize = subsetSize;
+			mEnumeration.resize( mSubsetSize );
+			for ( size_t index( mSubsetSize ); index--;
+				mEnumeration[ index ] = offset + index );
 		}
 
 	public:
@@ -169,11 +174,11 @@ public:
 		{
 			size_t index;
 			for ( index = 0;
-				index < mNumberElements
+				index < mSubsetSize
 					&& mEnumeration[ index ] >= ( mNumberElements - index );
 				++index );
 
-			if ( index != mNumberElements )
+			if ( index != mSubsetSize )
 			{
 				for ( mEnumeration[ index ]++; index--;
 					mEnumeration[ index ] = mEnumeration[ index + 1 ] + 1 );
@@ -254,7 +259,7 @@ public:
 	 */
 	iterator begin() const
 	{
-		return iterator( true, mNumberElements, mSubsetSize );
+		return iterator( false, mNumberElements, mSubsetSize );
 	}
 
 	/**
@@ -263,6 +268,6 @@ public:
 	 */
 	iterator end() const
 	{
-		return iterator( false, mNumberElements, mSubsetSize );
+		return iterator( true, mNumberElements, mSubsetSize );
 	}
 };
