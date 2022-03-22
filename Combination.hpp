@@ -186,7 +186,7 @@ public:
 		 * Member redirect.
 		 * @return Const pointer to the enumeration.
 		 */
-		pointer operator->()
+		pointer operator->() const
 		{
 			return &mEnumeration;
 		}
@@ -237,7 +237,7 @@ public:
 		 * @param other Reference to the iterator to swap with.
 		 */
 		void swap(
-			iterator& other )
+			const_iterator& other )
 		{
 			std::swap( mNumberElements, other.mNumberElements );
 			std::swap( mSubsetSize, other.mSubsetSize );
