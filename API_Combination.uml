@@ -1,0 +1,30 @@
+@startuml
+class Combination {
++{method} Combination( size_t numberElements, size_t subsetSize );
++{method} Combination( const Combination& other );
++{method} Combination( Combination&& other );
++{method} const_iterator begin() const;
++{method} const_iterator end() const;
++{method} size_t numberElements() const;
++{method} Combination& operator=( const Combination& other );
++{method} Combination& operator=( Combination&& other );
++{method} size_t subsetSize() const;
+}
+
+class Combination::const_iterator {
++{method} const_iterator();
++{method} const_iterator( const const_iterator& other );
++{method} const_iterator( const_iterator&& other );
++{method} const_iterator& operator=( const const_iterator& other );
++{method} const_iterator& operator=( const_iterator&& other );
++{method} bool operator==( const const_iterator& other ) const;
++{method} bool operator!=( const const_iterator& other ) const;
++{method} pointer operator->() const;
++{method} reference operator*() const;
++{method} const_iterator operator++( int );
++{method} const_iterator& operator++();
++{method} void swap( const_iterator& other );
+}
+
+Combination +-- Combination::const_iterator
+@enduml
