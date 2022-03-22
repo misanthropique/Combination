@@ -57,6 +57,8 @@ public:
 	class const_iterator
 	{
 	private:
+		friend class Combination;
+
 		size_t mNumberElements;
 		size_t mSubsetSize;
 		std::vector< size_t > mEnumeration;
