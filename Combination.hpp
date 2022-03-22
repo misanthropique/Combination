@@ -59,6 +59,7 @@ public:
 	private:
 		friend class Combination;
 
+		bool mIsEnd;
 		size_t mNumberElements;
 		size_t mSubsetSize;
 		std::vector< size_t > mEnumeration;
@@ -68,10 +69,12 @@ public:
 			size_t numberElements,
 			size_t subsetSize )
 		{
-			size_t offset = end * ( numberElements - mSubsetSize );
+			mIsEnd = end;
 			mNumberElements = numberElements;
 			mSubsetSize = subsetSize;
 			mEnumeration.resize( mSubsetSize );
+
+			size_t offset = end * ( numberElements - mSubsetSize );
 			for ( size_t index( mSubsetSize ); index--;
 				mEnumeration[ index ] = offset + index );
 		}
@@ -79,6 +82,7 @@ public:
 		void _copyAssign(
 			const const_iterator& other )
 		{
+			mIsEnd = other.mIsEnd;
 			mEnumeration = other.mEnumeration;
 			mNumberElements = other.mNumberElements;
 			mSubsetSize = other.mSubsetSize;
@@ -87,6 +91,7 @@ public:
 		void _moveAssign(
 			const_iterator&& other )
 		{
+			mIsEnd = std::exchange( other.mIsEnd, true );
 			mEnumeration = std::move( other.mEnumeration );
 			mNumberElements = std::exchange( other.mNumberElements, 0 );
 			mSubsetSize = std::exchange( other.mSubsetSize, 0 );
@@ -106,6 +111,7 @@ public:
 		{
 			mNumberElements = 0;
 			mSubsetSize = 0;
+			mIsEnd = true;
 		}
 
 		/**
@@ -170,7 +176,8 @@ public:
 		{
 			return ( mNumberElements == other.mNumberElements )
 				and ( mSubsetSize == other.mSubsetSize )
-				and ( mEnumeration == other.mEnumeration );
+				and ( mEnumeration == other.mEnumeration )
+				and ( mIsEnd == other.mIsEnd );
 		}
 
 		/**
@@ -219,16 +226,17 @@ public:
 		 */
 		const_iterator& operator++()
 		{
-			size_t index;
-			for ( index = 0;
-				index < mSubsetSize
-					&& mEnumeration[ index ] >= ( mNumberElements - index );
-				++index );
+			size_t index = mEnumeration.size();
+			for ( ; index-- && mEnumeration[ index ] == ( mNumberElements - mSubsetSize + index ); );
 
-			if ( index != mSubsetSize )
+			if ( size_t( -1 ) != index )
 			{
-				for ( mEnumeration[ index ]++; index--;
-					mEnumeration[ index ] = mEnumeration[ index + 1 ] + 1 );
+				for ( mEnumeration[ index ]++; ++index < mEnumeration.size();
+					mEnumeration[ index ] = mEnumeration[ index - 1 ] + 1 );
+			}
+			else
+			{
+				mIsEnd = true;
 			}
 
 			return *this;
