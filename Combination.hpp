@@ -72,11 +72,19 @@ public:
 			mIsEnd = end;
 			mNumberElements = numberElements;
 			mSubsetSize = subsetSize;
-			mEnumeration.resize( mSubsetSize );
 
-			size_t offset = end * ( numberElements - mSubsetSize );
-			for ( size_t index( mSubsetSize ); index--;
-				mEnumeration[ index ] = offset + index );
+			if ( ( 0 < mSubsetSize ) and ( mSubsetSize <= mNumberElements ) )
+			{
+				mEnumeration.resize( mSubsetSize );
+
+				size_t offset = end * ( numberElements - mSubsetSize );
+				for ( size_t index( mSubsetSize ); index--;
+					mEnumeration[ index ] = offset + index );
+			}
+			else
+			{
+				mIsEnd = true;
+			}
 		}
 
 		void _copyAssign(
